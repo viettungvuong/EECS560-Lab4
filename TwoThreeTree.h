@@ -8,9 +8,10 @@ public:
   ~TwoThreeTree();
   void recDestroy(TwoThreeNode* curr);
   void insert(int x);
-  void insert(int x, TwoThreeNode* curr);
+  void insertRec(int x, TwoThreeNode* curr);
   void split(TwoThreeNode* curr, TwoThreeNode* newNode);
   bool Delete(int x);
+  bool Delete(TwoThreeNode* x);
   int deleteMin();
   int deleteMax();
   int findMin();
@@ -24,8 +25,9 @@ public:
   TwoThreeNode* find(int x);
   TwoThreeNode* find(int x, TwoThreeNode* curr);
   void levelOrder(); //implement queue
+  void recUpdateAllMins(TwoThreeNode* curr);
   void addChild(TwoThreeNode* par, int pos, TwoThreeNode* child);
-
+  int numLeafChildren(TwoThreeNode* x);
 private:
   TwoThreeNode* root;
 };

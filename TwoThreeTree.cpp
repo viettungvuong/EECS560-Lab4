@@ -84,7 +84,6 @@ void TwoThreeTree::insert(int x){
   if (this->root == nullptr){
     TwoThreeNode* newRoot = new TwoThreeNode(x, true, this->root);
     this->root = newRoot;
-    return;
   }
   //one node
   else if(this->root->tag){
@@ -104,11 +103,11 @@ void TwoThreeTree::insert(int x){
     this->root->parent = newIntern;    
   }
   else{
-    insert(x, this->root);
+    insertRec(x, this->root);
   }
 }
     
-void TwoThreeTree::insert(int x, TwoThreeNode* curr){
+void TwoThreeTree::insertRec(int x, TwoThreeNode* curr){
   bool firstFull = false;
   bool secondFull = false;
   bool thirdFull = false;
@@ -158,7 +157,8 @@ void TwoThreeTree::insert(int x, TwoThreeNode* curr){
     curr->parent->minThird = findMin(curr->parent->third);
 
   }
-  //split into two 2-nodes
+  //split into two 2-nodes with 4 children total
+  //gives us 'another spot to put it'
   else if (spotFoundThreeChildren){
     TwoThreeNode* newNode = new TwoThreeNode(-1, false, curr->parent);    
     //add as first
@@ -203,17 +203,18 @@ void TwoThreeTree::insert(int x, TwoThreeNode* curr){
     newNode->minThird = -1;
     split(curr, newNode);
   }
+  //not yet to leaves
   //recurse on first
   else if (x<curr->minSecond){
-    insert(x, curr->first);
+    insertRec(x, curr->first);
   }
   //recurse on second
   else if (x<curr->minThird){
-    insert(x, curr->second);
+    insertRec(x, curr->second);
   }
   //recurse on third
   else{
-    insert(x, curr->third);
+    insertRec(x, curr->third);
   } 
 
 }
@@ -227,22 +228,7 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
   }
   else{
     TwoThreeNode* par = curr->parent;
-    bool firstFull = false;
-    bool secondFull = false;
-    bool thirdFull = false;
-    if(curr->first != nullptr){
-      firstFull = curr->first->tag;
-    }
-    if(curr->second != nullptr){
-      secondFull = curr->second->tag;
-    }
-    if(curr->third != nullptr){
-      thirdFull = curr->third->tag;
-    }
-    int count = 0;
-    if (firstFull) count++;
-    if (secondFull) count++;
-    if (thirdFull) count++;
+    int count = numLeafChildren(par);
     bool twoChildren = ((count==2)&&(par->tag==false));
     bool threeChildren = ((count==3)&&(par->tag==false));
     if(twoChildren){
@@ -283,7 +269,171 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
   }
 }
 bool TwoThreeTree::Delete(int x){
-  
+  TwoThreeNode* target = find(x);
+  if(target == nullptr){
+    return false;
+  }
+  else{
+    return Delete(target);
+  }
+}
+bool TwoThreeTree::Delete(TwoThreeNode* x){
+  //x is root
+  if(x==this->root){
+    delete x;
+    this->root = nullptr;
+  }
+  else{
+    TwoThreeNode* par = x->parent;
+    int count = numLeafChildren(par);
+    bool twoChildren = ((count==2)&&(par->tag==false));
+    bool threeChildren = ((count==3)&&(par->tag==false));
+    //x's parent has two children
+    if(twoChildren){
+      //x's parent is root
+      if(par == (this->root)){
+        TwoThreeNode* tmp = par;
+        if(par->first == x){
+          this->root = par->second;
+          delete x;
+          delete tmp;
+          
+        }
+        else{
+          this->root = par->first;
+          delete x;
+          delete tmp;
+        }
+      }
+      else{
+        TwoThreeNode* par2 = par->parent;
+        TwoThreeNode* parSib;
+        if(numLeafChildren(par2->first) == 3 && par2->second == par){
+          parSib = par2->first;
+          if(par->second ==x){
+            addChild(par, 2, par->first);
+          }
+          addChild(par, 1, parSib->third);
+          parSib->minThird = -1;
+          parSib->third = nullptr;
+        }
+        else if (numLeafChildren(par2->second) == 3 && (par==par2->first || par==par2->third)){
+          parSib = par2->second;
+          if(par2->first == par){
+            if(par->first == x) addChild (par, 1, par->second);
+            addChild(par, 2, parSib->first);
+            addChild(parSib, 1, parSib->second);
+            addChild(parSib, 2, parSib->third);
+            parSib->minThird = -1;
+            parSib->third = nullptr;
+          }
+          else{
+            if(par->second == x) addChild(par, 2, par->first);
+            addChild(par, 1, parSib->third);
+            parSib->minThird = -1;
+            parSib->third = nullptr;
+          }
+        }
+        else if (numLeafChildren(par2->third) == 3 && par == par2->second){
+          parSib = par2->third;
+          if(par->first == x) addChild (par, 1, par->second);
+          addChild(par, 2, parSib->first);
+          addChild(parSib, 1, parSib->second);
+          addChild(parSib, 2, parSib->third);
+          parSib->minThird = -1;
+          parSib->third = nullptr;
+        }
+        else{
+          TwoThreeNode* xSib;
+          if(x==par->first){
+            xSib = par->second;
+          }
+          else xSib = par->first;
+          if(par2->first == par){
+            parSib = par2->second;
+            addChild(parSib, 3, parSib->second);
+            addChild(parSib, 2, parSib->first);
+            addChild(parSib, 1, xSib);
+          }
+          else if(par2->second == par){
+            parSib = par2->first;
+            if(numLeafChildren(parSib) != 3) addChild(parSib, 3, xSib);
+            else{
+              parSib = par2->third;
+              addChild(parSib, 3, parSib->second);
+              addChild(parSib, 2, parSib->first);
+              addChild(parSib, 1, xSib);
+            }
+          }
+          else{
+            parSib = par2->second;
+            addChild(parSib, 3, xSib);
+          }
+          delete x;
+          Delete(par);
+        }
+      }
+    }
+    else if (threeChildren){
+      if(par->first == x){
+        delete x;
+        par->first = par->second;
+        par->second = par->third;
+        par->third = nullptr;
+        par->minSecond = par->minThird;
+        par->minThird = -1;
+      }
+      else if (par->second ==x){
+        delete x;
+        par->second = par->third;
+        par->third = nullptr;
+        par->minSecond = par->minThird;
+        par->minThird = -1;
+      }
+      else{
+        delete x;
+        par->third = nullptr;
+        par->minThird = -1;
+      }
+    }
+    recUpdateAllMins(this->root);
+  }
+  return true;
+}
+void TwoThreeTree::recUpdateAllMins(TwoThreeNode* curr){
+  if(curr!=nullptr && !curr->tag){
+    recUpdateAllMins(curr->first);
+    if(curr->second != nullptr){
+      recUpdateAllMins(curr->second);
+      curr->minSecond = findMin(curr->second);
+    }
+    else curr->minSecond = -1;
+
+    if(curr->third != nullptr){
+      recUpdateAllMins(curr->third);
+      curr->minThird = findMin(curr->third);
+    }
+    else curr->minThird = -1;
+  }
+}
+int TwoThreeTree::numLeafChildren(TwoThreeNode* x){
+  bool firstFull = false;
+  bool secondFull = false;
+  bool thirdFull = false;
+  if(x->first != nullptr){
+    firstFull = x->first->tag;
+  }
+  if(x->second != nullptr){
+    secondFull = x->second->tag;
+  }
+  if(x->third != nullptr){
+    thirdFull = x->third->tag;
+  }
+  int count = 0;
+  if (firstFull) count++;
+  if (secondFull) count++;
+  if (thirdFull) count++;
+  return count;
 }
 
 //add child and set parent automatically
@@ -314,17 +464,12 @@ void TwoThreeTree::levelOrder(){
   Queue* q = new Queue();
   if(this->root != nullptr){
     q->enqueue(this->root);
-    int lvl = 0;
     TwoThreeNode* curr;
     while(!q->isEmpty()){
       curr = q->peek();
       if(curr->tag){
         std::cout << curr->val << " ";
       }
-      else{
-        //std::cout << curr->minSecond << " " << curr->minThird << " ";
-      }
-
       if(curr->first != nullptr){
         q->enqueue(curr->first);
       }
