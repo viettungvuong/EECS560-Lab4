@@ -1,5 +1,8 @@
 #include "TwoThreeNode.h"
 #include "TwoThreeTree.h"
+#include "Queue.h"
+#include <iostream>
+
 TwoThreeTree::TwoThreeTree(){
   this->root = nullptr;
 }
@@ -61,6 +64,7 @@ int TwoThreeTree::findMax(TwoThreeNode* curr){
   if (curr->tag) return curr->val;
   if(curr->third != nullptr) return findMax(curr->third);
   if(curr->second != nullptr) return findMax(curr->second);
+  return -1;
 }
 
 TwoThreeNode* TwoThreeTree::findMaxNode(){
@@ -71,6 +75,7 @@ TwoThreeNode* TwoThreeTree::findMaxNode(TwoThreeNode* curr){
   if (curr->tag) return curr;
   if (curr->third != nullptr) return findMaxNode(curr->third);
   if (curr->second != nullptr) return findMaxNode(curr->second);
+  return nullptr;
 }
 
 
@@ -104,9 +109,18 @@ void TwoThreeTree::insert(int x){
 }
     
 void TwoThreeTree::insert(int x, TwoThreeNode* curr){
-  bool firstFull = (curr->first != nullptr && curr->first->tag == true);
-  bool secondFull = (curr->second != nullptr && curr->second->tag == true);
-  bool thirdFull = (curr->third != nullptr && curr->third->tag == true);
+  bool firstFull = false;
+  bool secondFull = false;
+  bool thirdFull = false;
+  if(curr->first != nullptr){
+    firstFull = curr->first->tag;
+  }
+  if(curr->second != nullptr){
+    secondFull = curr->second->tag;
+  }
+  if(curr->third != nullptr){
+    thirdFull = curr->third->tag;
+  }
   int count = 0;
   if (firstFull) count++;
   if (secondFull) count++;
@@ -152,8 +166,8 @@ void TwoThreeTree::insert(int x, TwoThreeNode* curr){
       addChild(newNode, 1, curr->second);
       addChild(newNode, 2, curr->third);
       curr->second = nullptr;
-      curr->third = nullptr;
       newNode->minSecond = curr->third->val;
+      curr->third = nullptr;      
       TwoThreeNode* tmp = curr->first;
       addChild(curr, 1 , new TwoThreeNode(x, true, curr));
       addChild(curr, 2, tmp);
@@ -213,9 +227,18 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
   }
   else{
     TwoThreeNode* par = curr->parent;
-    bool firstFull = (par->first != nullptr && par->first->tag == true);
-    bool secondFull = (par->second != nullptr && par->second->tag == true);
-    bool thirdFull = (par->third != nullptr && par->third->tag == true);
+    bool firstFull = false;
+    bool secondFull = false;
+    bool thirdFull = false;
+    if(curr->first != nullptr){
+      firstFull = curr->first->tag;
+    }
+    if(curr->second != nullptr){
+      secondFull = curr->second->tag;
+    }
+    if(curr->third != nullptr){
+      thirdFull = curr->third->tag;
+    }
     int count = 0;
     if (firstFull) count++;
     if (secondFull) count++;
@@ -277,12 +300,41 @@ void TwoThreeTree::addChild(TwoThreeNode* par, int pos, TwoThreeNode* child){
   child->parent = par;
 }
 
-void TwoThreeTree::deleteMax(){
-
+int TwoThreeTree::deleteMax(){
+  int target = findMax();
+  Delete(target);
+  return target;
 }
-void TwoThreeTree::deleteMin(){
-
+int TwoThreeTree::deleteMin(){
+  int target = findMin();
+  Delete(target);
+  return target;
 }
 void TwoThreeTree::levelOrder(){
-  
+  Queue* q = new Queue();
+  if(this->root != nullptr){
+    q->enqueue(this->root);
+    int lvl = 0;
+    TwoThreeNode* curr;
+    while(!q->isEmpty()){
+      curr = q->peek();
+      if(curr->tag){
+        std::cout << curr->val << " ";
+      }
+      else{
+        //std::cout << curr->minSecond << " " << curr->minThird << " ";
+      }
+
+      if(curr->first != nullptr){
+        q->enqueue(curr->first);
+      }
+      if(curr->second != nullptr){
+        q->enqueue(curr->second);
+      }
+      if(curr->third != nullptr){
+        q->enqueue(curr->third);
+      }
+      q->dequeue();
+    }
+  }
 }

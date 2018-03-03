@@ -11,8 +11,8 @@ public:
   void insert(int x, TwoThreeNode* curr);
   void split(TwoThreeNode* curr, TwoThreeNode* newNode);
   bool Delete(int x);
-  void deleteMin();
-  void deleteMax();
+  int deleteMin();
+  int deleteMax();
   int findMin();
   int findMin(TwoThreeNode* curr);
   int findMax();

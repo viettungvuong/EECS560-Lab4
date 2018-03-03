@@ -12,36 +12,73 @@ int main(){
     }
     bool going = true;
     int choice;
-    std::cout << "Please choose one of the following commands:\n";
-    std::cout << "1- Insert\n2- DeleteMin\n3- DeleteMax\n4- FindMin\n5- FindMax\n6- Find\n7- Delete\n8- Level Order\n9- Exit\n";
     while(going){
+        std::cout << "Please choose one of the following commands:\n";
+        std::cout << "1- Insert\n2- DeleteMin\n3- DeleteMax\n4- FindMin\n5- FindMax\n6- Find\n7- Delete\n8- Level Order\n9- Exit\n";
+        std::cin >> choice;    
         switch(choice){
             case 1:
+            {
+                int insertVal;
+                std::cout << "Choose a number to be inserted to the tree:";
+                std::cin >> insertVal;
+                tree->insert(insertVal);
+                break;
+            }
             case 2:
-                tree->deleteMin();
+            {
+                int delMinRes = tree->deleteMin();
+                std::cout << delMinRes << " has been deleted from the tree.";
                 break;
+            }
             case 3:
-                tree->deleteMax();
+            {
+                int delMaxRes = tree->deleteMax();
+                std::cout << delMaxRes << " has been deleted from the tree.";
                 break;
+            }
             case 4:
+            {
                 tree->findMin();
                 break;
+            }
             case 5:
+            {
                 tree->findMax();
                 break;
+            }
             case 6:
+            {
                 int findTarget;
-                tree->find(findTarget);
+                std::cout << "Enter a number to be found:";
+                std::cin >> findTarget;
+                TwoThreeNode* res = tree->find(findTarget);
+                if(res != nullptr){
+                    std::cout << findTarget << " exists in the tree";
+                }
+                else{
+                    std::cout << findTarget << " does not exist in the tree";
+                }
                 break;
+            }
             case 7:
-                int delTarget;
+            {
+                int delTarget;            
+                std::cout << "Choose a number to be deleted from the tree:";
+                std::cin >> delTarget;
                 tree->Delete(delTarget);
+                break;
+            }
             case 8:
+            {
                 tree->levelOrder();
                 break;
+            }
             case 9:
+            {
                 going = false;
                 break;
+            }
         }
     }
     return 0;
