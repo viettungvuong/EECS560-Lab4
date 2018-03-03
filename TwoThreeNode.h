@@ -7,10 +7,11 @@ public:
   ~TwoThreeNode();
   int minSecond;
   int minThird;
-  int key;
+  int val;
   bool tag; //true if leaf
   TwoThreeNode* parent;
   TwoThreeNode* first;
   TwoThreeNode* second;
   TwoThreeNode* third;
-}
+};
+#endif

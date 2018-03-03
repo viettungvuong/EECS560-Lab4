@@ -1,5 +1,5 @@
-#import "TwoThreeNode.h"
-
+#include "TwoThreeNode.h"
+#include "TwoThreeTree.h"
 TwoThreeTree::TwoThreeTree(){
   this->root = nullptr;
 }
@@ -17,7 +17,7 @@ TwoThreeNode* TwoThreeTree::find(int x){
   if(this->root == nullptr) return nullptr;
   return find(x, this->root);
 }
-TwoThreeNodee* TwoThreeTree::find(int x, TwoThreeNode* curr){
+TwoThreeNode* TwoThreeTree::find(int x, TwoThreeNode* curr){
   if(curr->tag &&curr->val==x) return curr;
   if(curr->tag) return nullptr;
   if(x>=curr->minThird && curr->minThird != -1){
@@ -46,7 +46,7 @@ TwoThreeNode* TwoThreeTree::findMinNode(){
   return findMinNode(this->root);
 }
 TwoThreeNode* TwoThreeTree::findMinNode(TwoThreeNode* curr){
-  if (curr == nullptr) return -1;
+  if (curr == nullptr) return nullptr;
   if (curr->first == nullptr) return curr;
   return findMinNode(curr->first);
 }
@@ -74,8 +74,6 @@ TwoThreeNode* TwoThreeTree::findMaxNode(TwoThreeNode* curr){
 }
 
 
-
-
 void TwoThreeTree::insert(int x){
   //0 nodes
   if (this->root == nullptr){
@@ -101,11 +99,11 @@ void TwoThreeTree::insert(int x){
     this->root->parent = newIntern;    
   }
   else{
-    insertRec(x, this->root);
+    insert(x, this->root);
   }
 }
     
-void TwoThreeTree::insertRec(int x, TwoThreeNode* curr){
+void TwoThreeTree::insert(int x, TwoThreeNode* curr){
   bool firstFull = (curr->first != nullptr && curr->first->tag == true);
   bool secondFull = (curr->second != nullptr && curr->second->tag == true);
   bool thirdFull = (curr->third != nullptr && curr->third->tag == true);
@@ -139,7 +137,7 @@ void TwoThreeTree::insertRec(int x, TwoThreeNode* curr){
     }
     //third
     else{
-      addChild(curr, third, new TwoThreeNode(x, true, curr));
+      addChild(curr, 3, new TwoThreeNode(x, true, curr));
       curr->minThird = x;
     }
     curr->parent->minSecond = findMin(curr->parent->second);
@@ -193,15 +191,15 @@ void TwoThreeTree::insertRec(int x, TwoThreeNode* curr){
   }
   //recurse on first
   else if (x<curr->minSecond){
-    insertRec(x, curr->first);
+    insert(x, curr->first);
   }
   //recurse on second
   else if (x<curr->minThird){
-    insertRec(x, curr->second);
+    insert(x, curr->second);
   }
   //recurse on third
   else{
-    insertRec(x, curr->third);
+    insert(x, curr->third);
   } 
 
 }
@@ -225,7 +223,7 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
     bool twoChildren = ((count==2)&&(par->tag==false));
     bool threeChildren = ((count==3)&&(par->tag==false));
     if(twoChildren){
-      if(par->first = curr){
+      if(par->first == curr){
         addChild(par, 3, par->second);
         addChild(par, 2, newNode);
       }
@@ -236,14 +234,14 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
       par->minThird = findMin(par->third);
     }
     else if (threeChildren){
-      TwoThreeNode* newIntern = new TwoThreeNode(-f, false, );
+      TwoThreeNode* newIntern = new TwoThreeNode(-1, false, nullptr);
       if(par->first == curr){
         addChild(newIntern, 1, par->second);
         addChild(newIntern, 2, par->third);
         addChild(par, 2, newNode);
         par->third = nullptr;
       }
-      else if (par->second = curr){
+      else if (par->second == curr){
         addChild(newIntern, 1, newNode);    
         addChild(newIntern, 2, par->third);
         par->third = nullptr;
@@ -261,9 +259,10 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
     }
   }
 }
-void TwoThreeTree::Delete(int x){
+bool TwoThreeTree::Delete(int x){
   
 }
+
 //add child and set parent automatically
 void TwoThreeTree::addChild(TwoThreeNode* par, int pos, TwoThreeNode* child){
   if (pos ==1){
@@ -278,3 +277,12 @@ void TwoThreeTree::addChild(TwoThreeNode* par, int pos, TwoThreeNode* child){
   child->parent = par;
 }
 
+void TwoThreeTree::deleteMax(){
+
+}
+void TwoThreeTree::deleteMin(){
+
+}
+void TwoThreeTree::levelOrder(){
+  
+}

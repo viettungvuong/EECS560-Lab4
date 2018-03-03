@@ -18,24 +18,26 @@ int main(){
         switch(choice){
             case 1:
             case 2:
-                tree.deleteMin();
+                tree->deleteMin();
                 break;
             case 3:
-                tree.deleteMax();
+                tree->deleteMax();
                 break;
             case 4:
-                tree.findMin();
+                tree->findMin();
                 break;
             case 5:
-                tree.findMax();
+                tree->findMax();
                 break;
             case 6:
-                tree.find();
+                int findTarget;
+                tree->find(findTarget);
                 break;
             case 7:
-                tree.delete();
+                int delTarget;
+                tree->Delete(delTarget);
             case 8:
-                tree.levelOrder();
+                tree->levelOrder();
                 break;
             case 9:
                 going = false;
