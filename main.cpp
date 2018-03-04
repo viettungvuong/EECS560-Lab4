@@ -28,13 +28,23 @@ int main(){
             case 2:
             {
                 int delMinRes = tree->deleteMin();
-                std::cout << delMinRes << " has been deleted from the tree.";
+                if(delMinRes ==-1){
+                    std::cout << "Nothing to delete.\n";
+                }
+                else{
+                    std::cout << delMinRes << " has been deleted from the tree.\n";
+                }
                 break;
             }
             case 3:
             {
                 int delMaxRes = tree->deleteMax();
-                std::cout << delMaxRes << " has been deleted from the tree.";
+                if(delMaxRes ==-1){
+                    std::cout << "Nothing to delete.\n";
+                }
+                else{
+                    std::cout << delMaxRes << " has been deleted from the tree.\n";
+                }
                 break;
             }
             case 4:
@@ -54,10 +64,10 @@ int main(){
                 std::cin >> findTarget;
                 TwoThreeNode* res = tree->find(findTarget);
                 if(res != nullptr){
-                    std::cout << findTarget << " exists in the tree";
+                    std::cout << findTarget << " exists in the tree\n";
                 }
                 else{
-                    std::cout << findTarget << " does not exist in the tree";
+                    std::cout << findTarget << " does not exist in the tree\n";
                 }
                 break;
             }
@@ -66,7 +76,9 @@ int main(){
                 int delTarget;            
                 std::cout << "Choose a number to be deleted from the tree:";
                 std::cin >> delTarget;
-                tree->Delete(delTarget);
+                bool succ = tree->Delete(delTarget);
+                if(succ) std::cout << delTarget << " has been deleted from the tree\n";
+                else std::cout << delTarget << " could not be deleted.\n";
                 break;
             }
             case 8:

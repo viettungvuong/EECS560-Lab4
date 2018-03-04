@@ -14,4 +14,4 @@ public:
     void setNext(QueueNode* newNext);
 };
 
-#endif QNODE
+#endif
