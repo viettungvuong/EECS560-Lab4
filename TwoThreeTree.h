@@ -20,10 +20,10 @@ public:
   int findMax(TwoThreeNode* curr);
   TwoThreeNode* find(int x);
   TwoThreeNode* find(int x, TwoThreeNode* curr);
-  void levelOrder(); //implement queue
+  void levelOrder(); 
   void recUpdateAllMins(TwoThreeNode* curr);
   void addChild(TwoThreeNode* par, int pos, TwoThreeNode* child);
-  int numLeafChildren(TwoThreeNode* x);
+  int numChildren(TwoThreeNode* x);
 private:
   TwoThreeNode* root;
 };

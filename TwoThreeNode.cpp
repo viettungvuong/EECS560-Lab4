@@ -1,4 +1,5 @@
 #include "TwoThreeNode.h"
+//construct node.
 TwoThreeNode::TwoThreeNode(int x, bool flag, TwoThreeNode* parent){
   this->tag = flag;
   this->val = x;
