@@ -17,6 +17,7 @@ int main(){
         std::cout << "1- Insert\n2- DeleteMin\n3- DeleteMax\n4- FindMin\n5- FindMax\n6- Find\n7- Delete\n8- Level Order\n9- Exit\n";
         std::cin >> choice;    
         switch(choice){
+            //Insert
             case 1:
             {
                 int insertVal;
@@ -25,6 +26,7 @@ int main(){
                 tree->insert(insertVal);
                 break;
             }
+            //Delete Min
             case 2:
             {
                 int delMinRes = tree->deleteMin();
@@ -36,6 +38,7 @@ int main(){
                 }
                 break;
             }
+            //Delete Max
             case 3:
             {
                 int delMaxRes = tree->deleteMax();
@@ -47,16 +50,19 @@ int main(){
                 }
                 break;
             }
+            //Find Min
             case 4:
             {
                 tree->findMin();
                 break;
             }
+            //Find Max
             case 5:
             {
                 tree->findMax();
                 break;
             }
+            //Find
             case 6:
             {
                 int findTarget;
@@ -71,6 +77,7 @@ int main(){
                 }
                 break;
             }
+            //Delete
             case 7:
             {
                 int delTarget;            
@@ -81,11 +88,13 @@ int main(){
                 else std::cout << delTarget << " does not exist in the tree.\n";
                 break;
             }
+            //Level Order
             case 8:
             {
                 tree->levelOrder();
                 break;
             }
+            //Quit
             case 9:
             {
                 going = false;
@@ -93,5 +102,6 @@ int main(){
             }
         }
     }
+    delete(tree);
     return 0;
 }
