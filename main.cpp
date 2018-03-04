@@ -78,7 +78,7 @@ int main(){
                 std::cin >> delTarget;
                 bool succ = tree->Delete(delTarget);
                 if(succ) std::cout << delTarget << " has been deleted from the tree\n";
-                else std::cout << delTarget << " could not be deleted.\n";
+                else std::cout << delTarget << " does not exist in the tree.\n";
                 break;
             }
             case 8:

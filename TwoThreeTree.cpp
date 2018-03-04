@@ -470,7 +470,7 @@ void TwoThreeTree::levelOrder(){
     q->enqueue(this->root);
     TwoThreeNode* curr;
     while(!q->isEmpty()){
-      //put all of a node's children on the queue before popping it
+      //put all of a node's children on the queue before popping it 
       curr = q->peek();
       if(curr->tag){
         std::cout << curr->val << " ";
