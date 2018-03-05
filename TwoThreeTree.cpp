@@ -247,11 +247,14 @@ void TwoThreeTree::split(TwoThreeNode* curr, TwoThreeNode* newNode){
         addChild(newIntern, 1, par->third);    
         addChild(newIntern, 2, newNode);
       }
-      par->minSecond = findMin(par->second);
-      par->minThird = -1;
 
       newIntern->minSecond = findMin(newIntern->second);
       newIntern->minThird = -1;
+      
+      par->minSecond = findMin(par->second);
+      par->minThird = -1;
+
+
       split(par, newIntern);    
     }
   }
@@ -278,7 +281,7 @@ bool TwoThreeTree::Delete(TwoThreeNode* x){
     int count = numChildren(par);
     bool twoChildren = ((count==2)&&(par->tag==false));
     bool threeChildren = ((count==3)&&(par->tag==false));
-    //x's parent has two children
+    //x's parent has two children - have to prevent it from becoming a 1-node
     if(twoChildren){
       //x's parent is root
       if(par == (this->root)){
@@ -297,10 +300,11 @@ bool TwoThreeTree::Delete(TwoThreeNode* x){
           delete tmp;
         }
       }
-      //not root
+      //not root - reshuffle using a sibling of parent as we can't have a 1-node
       else{
         TwoThreeNode* par2 = par->parent;
         TwoThreeNode* parSib;
+        //these cases handle stealing a sibling's child to keep 2 nodes on x's parent
         if(numChildren(par2->first) == 3 && par2->second == par){
           parSib = par2->first;
           if(par->second ==x){
@@ -336,6 +340,7 @@ bool TwoThreeTree::Delete(TwoThreeNode* x){
           parSib->minThird = -1;
           parSib->third = nullptr;
         }
+        //this case handles moving x's parent's remaining child to a sibling if there's a space
         else{
           TwoThreeNode* xSib;
           if(x==par->first){
@@ -367,7 +372,7 @@ bool TwoThreeTree::Delete(TwoThreeNode* x){
         }
       }
     }
-    //x's parent has three children
+    //x's parent has three children - becomes a 2-node
     //cases for x being first, second, or third
     else if (threeChildren){
       if(par->first == x){
@@ -437,6 +442,7 @@ int TwoThreeTree::numChildren(TwoThreeNode* x){
 
 //add child and set parent automatically
 void TwoThreeTree::addChild(TwoThreeNode* par, int pos, TwoThreeNode* child){
+  if(pos!=1&&pos!=2&&pos!=3) return;
   if (pos ==1){
     par->first = child;
   }
