@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": true,
+      "externalConsole": false,
+      "cwd": "/Volumes/GoogleDrive/My Drive/Học/EECS560-Lab4",
+      "program": "/Volumes/GoogleDrive/My Drive/Học/EECS560-Lab4/build/Debug/outDebug",
+      "MIMode": "gdb"
+    },
+    {
+      "name": "Launch",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/${fileBasenameNoExtension}",
+      "args": [
+        "-arg1",
+        "-arg2"
+      ]
+    }
+  ]
+}
